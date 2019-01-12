@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.self.dao.system.RolePermissionMapper">
+	
+	<select id="findPermissionNameByRoleId" parameterType="string" resultType="string">
+		SELECT
+			per.percode AS percode
+		FROM
+			sys_role_permisson AS rpe,
+			sys_permission AS per
+		WHERE
+			rpe.role_id = #{roleId}
+		AND rpe.permission_id = per.id
+	</select>
+	
+	
+	<select id="findListPermissionByRoleId" parameterType="String" resultType="Map">
+		SELECT
+			per.id AS id,
+			per.name AS text,
+			rpe.id AS checked
+		FROM
+			sys_permission AS per
+		LEFT JOIN (
+			SELECT
+				permission_id,
+				id
+			FROM
+				sys_role_permission
+			WHERE
+				role_id = #{roleId}
+		) AS rpe ON per.id = rpe.permission_id AND per.status=1
+	</select>
+</mapper>

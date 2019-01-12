@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd	
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<mvc:annotation-driven/>	
+	<aop:config proxy-target-class="true"/>
+	<mvc:default-servlet-handler/>
+	
+	<context:component-scan base-package="com.self.controller" />
+	<context:component-scan base-package="com.json" />
+	
+	<aop:config proxy-target-class="true" />
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"></property>
+	</bean>
+
+	<!-- 配置SpringMVC的视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+<!-- 		<property name="exceptionMappings">        -->
+<!--              <props>        -->
+<!--                  <prop key="java.lang.Exception">errors/error</prop>        -->
+<!--                  <prop key="java.lang.Throwable">errors/err</prop>        -->
+<!--              </props>        -->
+<!--          </property>        -->
+<!--          <property name="statusCodes">        -->
+<!--              <props>        -->
+<!--                  <prop key="errors/error">500</prop>        -->
+<!--                  <prop key="errors/404">404</prop>        -->
+<!--              </props>        -->
+<!--          </property>        -->
+         <!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->       
+         <property name="warnLogCategory" value="WARN"></property>       
+         <!-- 默认错误页面，当找不到上面mappings中指定的异常对应视图时，使用本默认配置 -->       
+         <property name="defaultErrorView" value="error"></property>       
+         <!-- 默认HTTP状态码 -->       
+         <property name="defaultStatusCode" value="500"></property>  
+	</bean>
+	<!-- 上传拦截，如最大上传值及最小上传值 -->
+	  <bean id="multipartResolver"   class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >   
+		  <property name="maxUploadSize">    
+	          <value>104857600</value>    
+	       </property>   
+	        <property name="maxInMemorySize">    
+	            <value>4096</value>    
+	        </property>   
+	         <property name="defaultEncoding">    
+	            <value>utf-8</value>    
+	        </property> 
+    </bean>  
+	
+</beans>

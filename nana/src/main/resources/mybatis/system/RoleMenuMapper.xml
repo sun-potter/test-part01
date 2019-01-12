@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.self.dao.system.RoleMenuMapper">
+	
+	<select id="findListMenuByRoleId" parameterType="string" resultType="com.self.entity.system.Menu">
+		SELECT
+			me.id AS id,
+			me. NAME AS NAME,
+			me.url AS url,
+			me.superior AS superior,
+			me.sort AS sort,
+			me.icon AS icon,
+			me. STATUS AS STATUS,
+			me.tip AS tip
+		FROM
+			sys_role_menu AS ru
+		JOIN sys_menu AS me ON ru.menu_id = me.id
+		WHERE
+			me. STATUS = 1
+		AND ru.role_id = #{roleId}
+		ORDER BY
+			me.sort
+	</select>
+	
+	<select id="findListMenuRightByRoleId" parameterType="String" resultType="Map">
+		SELECT
+			men.id AS id,
+			men. NAME AS text,
+			men.superior AS pId,
+			rom.id AS checked
+		FROM
+			sys_menu AS men
+		LEFT JOIN (
+			SELECT
+				menu_id,
+				id
+			FROM
+				sys_role_menu
+			WHERE
+				role_id = #{roleId}
+		) AS rom ON men.id = rom.menu_id and men.status=1
+	</select>
+</mapper>

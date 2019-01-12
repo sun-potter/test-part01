@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.self.dao.system.UserMapper">
+	
+	<select id="selectAllWithDeptAndRole" resultType="com.self.entity.system.User" parameterType="java.util.Map">
+		SELECT
+			usr.id AS id,
+			usr.username AS username,
+			usr.password AS password,
+			usr.name AS name,
+			usr.rights AS rights,
+			usr.dept_id AS deptId,
+			usr.role_id AS roleId,
+			usr.status AS status,
+			usr.tip AS tip, 
+			dept.name AS deptName,
+			role.name AS roleName
+		FROM
+			sys_user AS usr LEFT JOIN sys_department AS dept ON usr.dept_id = dept.id
+		LEFT JOIN sys_role AS role ON usr.role_id = role.id
+		WHERE 1=1
+			<if test="queryName !=null and queryName !=''">
+				AND usr.name LIKE CONCAT('%',#{queryName},'%') 
+			</if>
+			<if test="queryDept !=null and queryDept !=''">
+				AND usr.dept_id = #{queryDept} 
+			</if>
+			<if test="queryRole !=null and queryRole !=''">
+				AND usr.role_id = #{queryRole} 
+			</if>
+			<if test="queryStatus !=null and queryStatus !=''">
+				AND usr.status = #{queryStatus} 
+			</if>
+	</select>
+	
+</mapper>
